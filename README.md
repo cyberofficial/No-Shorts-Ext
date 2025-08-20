@@ -5,6 +5,12 @@
 
 No Shorts Ext is a modern, privacy-friendly Chrome extension that removes all YouTube Shorts content from your browsing experience. It hides Shorts shelves, Shorts videos, sidebar buttons, and tabs—giving you a classic, distraction-free YouTube.
 
+## Download for Firefox
+
+You can install No Shorts Ext directly from the official Firefox Add-ons site:
+
+[**Download on Firefox Add-ons (AMO)**](https://addons.mozilla.org/en-US/firefox/addon/no-mo-shorts/)
+
 ---
 Video:
 

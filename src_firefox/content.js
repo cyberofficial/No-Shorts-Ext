@@ -41,7 +41,23 @@ function showCounterToast(count) {
     document.body.appendChild(toast);
     setTimeout(() => { toast.style.opacity = '1'; }, 10);
   }
-  toast.innerHTML = `<span style="font-size:1.1em;color:#fff;display:block;margin-bottom:0.2em;">Shorts Hidden from View so far:</span><span style="font-size:2.1em;font-weight:800;color:#81c784;">${count}</span>`;
+  // Clear previous content
+  while (toast.firstChild) toast.removeChild(toast.firstChild);
+  // Title
+  const titleSpan = document.createElement('span');
+  titleSpan.style.fontSize = '1.1em';
+  titleSpan.style.color = '#fff';
+  titleSpan.style.display = 'block';
+  titleSpan.style.marginBottom = '0.2em';
+  titleSpan.textContent = 'Shorts Hidden from View so far:';
+  toast.appendChild(titleSpan);
+  // Counter
+  const countSpan = document.createElement('span');
+  countSpan.style.fontSize = '2.1em';
+  countSpan.style.fontWeight = '800';
+  countSpan.style.color = '#81c784';
+  countSpan.textContent = String(count);
+  toast.appendChild(countSpan);
   toast.style.opacity = '1';
   counterToastActive = true;
   // Always clear and reset timer, and always remove toast after timeout
