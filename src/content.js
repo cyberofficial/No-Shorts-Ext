@@ -119,6 +119,24 @@ function zapAndRemove(node) {
 }
 
 function removeShorts() {
+    // Remove Shorts shelf: ytd-reel-shelf-renderer under #contents with title containing 'Shorts'
+    const contents = document.querySelector('#contents');
+    if (contents) {
+      const reelShelves = contents.querySelectorAll('ytd-reel-shelf-renderer');
+      reelShelves.forEach(shelf => {
+        const titleSpan = shelf.querySelector('#title');
+        if (titleSpan && titleSpan.textContent && titleSpan.textContent.toLowerCase().includes('shorts')) {
+          if (shelf.parentNode) {
+            if (zapModeEnabled) {
+              zapAndRemove(shelf);
+            } else {
+              shelf.parentNode.removeChild(shelf);
+              incrementShortsHiddenCounter();
+            }
+          }
+        }
+      });
+    }
     // Remove Shorts sidebar: #sections if any badge-shape-wiz__text is under 1:00
     const sections = document.querySelector('#sections');
     if (sections) {
@@ -260,6 +278,7 @@ function removeShorts() {
 
       // Remove Shorts tab from tab group
       const shortsTabs = document.querySelectorAll('yt-tab-shape');
+      const specialShortsTab = document.querySelector('#tabsContent > yt-tab-group-shape > div.yt-tab-group-shape-wiz__tabs > yt-tab-shape:nth-child(3)');
       shortsTabs.forEach(tab => {
         // Check for tab with text 'Shorts' (case-insensitive)
         const tabDiv = tab.querySelector('.yt-tab-shape-wiz__tab');
@@ -269,7 +288,9 @@ function removeShorts() {
               zapAndRemove(tab);
             } else {
               tab.parentNode.removeChild(tab);
-              incrementShortsHiddenCounter();
+              if (tab !== specialShortsTab) {
+                incrementShortsHiddenCounter();
+              }
             }
           }
         }
@@ -445,4 +466,21 @@ if (document.readyState === 'loading') {
 }
 window.addEventListener('load', () => {
   removeShorts();
+});
+
+// --- SPA navigation fix for YouTube (2025-08-20) ---
+// Listen for YouTube navigation events and re-run removeShorts
+const ytNavEvents = [
+  'yt-navigate-finish',
+  'yt-page-data-updated',
+  'yt-location-changed'
+];
+ytNavEvents.forEach(evt => {
+  window.addEventListener(evt, () => {
+    setTimeout(removeShorts, 1); // slight delay to allow DOM update
+  });
+});
+// Also listen for popstate (history navigation)
+window.addEventListener('popstate', () => {
+  setTimeout(removeShorts, 1);
 });
