@@ -243,35 +243,19 @@ function removeShorts() {
         }
       });
 
-      // Remove Shorts button from sidebar guide (robust: check title, aria-label, and text)
-      const guideItems = document.querySelectorAll('#items ytd-guide-entry-renderer');
-      const sidebarShortsEntry = document.querySelector('#items > ytd-guide-entry-renderer:nth-child(2)');
-      guideItems.forEach(item => {
-        // Check for Shorts by title attribute, aria-label, or visible text
-        const titleAttr = (item.getAttribute('title') || '').trim().toLowerCase();
-        const ariaLabel = (item.getAttribute('aria-label') || '').trim().toLowerCase();
-        const endpoint = item.querySelector('a#endpoint');
-        const endpointTitle = endpoint ? (endpoint.getAttribute('title') || '').trim().toLowerCase() : '';
-        const endpointAria = endpoint ? (endpoint.getAttribute('aria-label') || '').trim().toLowerCase() : '';
-        const titleSpan = item.querySelector('yt-formatted-string.title');
+      // Remove Shorts button from sidebar guide (robust: match #endpoint[title='Shorts'] and text)
+      const sidebarShortsButtons = document.querySelectorAll("#items a#endpoint[title='Shorts']");
+      sidebarShortsButtons.forEach(endpoint => {
+        // Confirm the visible text is Shorts (robust against icon-only entries)
+        const parentEntry = endpoint.closest('ytd-guide-entry-renderer');
+        const titleSpan = parentEntry ? parentEntry.querySelector('yt-formatted-string.title') : null;
         const text = titleSpan && titleSpan.textContent ? titleSpan.textContent.trim().toLowerCase() : '';
-        if (
-          titleAttr === 'shorts' ||
-          ariaLabel === 'shorts' ||
-          endpointTitle === 'shorts' ||
-          endpointAria === 'shorts' ||
-          text === 'shorts'
-        ) {
-          if (item.parentNode) {
-            if (zapModeEnabled) {
-              // Zap mode always increments counter, even for sidebar entry
-              zapAndRemove(item);
-            } else {
-              item.parentNode.removeChild(item);
-              if (item !== sidebarShortsEntry) {
-                incrementShortsHiddenCounter();
-              }
-            }
+        if (text === 'shorts' && parentEntry && parentEntry.parentNode) {
+          if (zapModeEnabled) {
+            zapAndRemove(parentEntry);
+          } else {
+            parentEntry.parentNode.removeChild(parentEntry);
+            incrementShortsHiddenCounter();
           }
         }
       });

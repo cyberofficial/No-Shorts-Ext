@@ -22,8 +22,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
     const key = `${SHORTS_KEY}_${tabId}`;
     chrome.storage.local.get(key).then(result => {
-      // Always default to false if not set
-      sendResponse({ enabled: !!result[key] });
+      if (result[key] !== undefined) {
+        sendResponse({ enabled: !!result[key] });
+      } else {
+        // If not set, check sync storage for default
+        chrome.storage.sync.get('shorts_default').then(sync => {
+          sendResponse({ enabled: sync.shorts_default === 'on' });
+        });
+      }
     });
     // Indicate async response
     return true;
