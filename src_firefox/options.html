@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>No Shorts Ext Options</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #181a20;
+      color: #f1f1f1;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1.5em;
+    }
+    .container {
+      background: #23262e;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px 0 #0008;
+      padding: 2.5em 2em 2em 2em;
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h2 {
+      font-size: 2.1em;
+      margin-bottom: 1.2em;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: #fff;
+      text-align: center;
+    }
+    label {
+      font-size: 1.35em;
+      font-weight: 500;
+      margin-bottom: 1.2em;
+      color: #e0e0e0;
+      display: block;
+      text-align: center;
+    }
+    select {
+      font-size: 1.25em;
+      padding: 0.4em 1.2em;
+      border-radius: 8px;
+      border: none;
+      background: #23262e;
+      color: #fff;
+      margin-left: 0.7em;
+      margin-bottom: 1.2em;
+      box-shadow: 0 2px 8px 0 #0004;
+      outline: none;
+      transition: background 0.2s;
+    }
+    select:focus {
+      background: #2c2f36;
+    }
+    #status {
+      margin-left: 0.5em;
+      color: #4caf50;
+      font-size: 1.1em;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 1.2em 0.5em 1.5em 0.5em;
+      }
+      h2 {
+        font-size: 1.3em;
+      }
+      label, select {
+        font-size: 1em;
+      }
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 2.5em;
+      transform: translateX(-50%);
+      background: #23262e;
+      color: #fff;
+      padding: 1em 2em;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px #000a;
+      font-size: 1.15em;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1000;
+      transition: opacity 0.25s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 120px;
+    }
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      display: flex;
+    }
+    .toast-timer {
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #4caf50, #81c784);
+      border-radius: 2px;
+      margin-top: 0.7em;
+      transform: scaleX(1);
+      transform-origin: left;
+      transition: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>No Shorts Ext Options</h2>
+    <div id="shortsCounterInfo" style="margin-bottom:1.2em;font-size:1.15em;font-weight:500;color:#81c784;text-align:center;">
+  <span style="font-size:1.45em;font-weight:700;letter-spacing:0.01em;color:#fff;display:block;line-height:1.3;">Shorts Hidden from View so far:</span>
+  <span id="shortsHiddenCount" style="font-size:2.2em;font-weight:800;color:#81c784;display:block;margin-top:0.15em;">0</span>
+  <button id="resetShortsCounterBtn" style="margin-top:0.7em;padding:0.45em 1.2em;font-size:1.1em;font-weight:600;background:#2c2f36;color:#ff5252;border:none;border-radius:8px;box-shadow:0 2px 8px #0004;cursor:pointer;transition:background 0.2s;">Reset Counter</button>
+  <label for="showCounterToast" style="margin-top:0.9em;display:block;font-size:1.08em;font-weight:500;color:#b2dfdb;cursor:pointer;">
+    <input type="checkbox" id="showCounterToast" style="transform:scale(1.2);margin-right:0.5em;vertical-align:middle;"> Show counter when short is removed
+  </label>
+    </div>
+    <label for="defaultToggle">Default Shorts Removal:
+      <select id="defaultToggle">
+        <option value="on">On</option>
+        <option value="off">Off</option>
+      </select>
+    </label>
+    <label for="zapModeToggle" style="margin-bottom:0.7em;">
+      <input type="checkbox" id="zapModeToggle" style="transform:scale(1.3);margin-right:0.5em;vertical-align:middle;"> Zap Mode (blow up Shorts!)
+    </label>
+    <label for="zapDelaySelect" style="margin-bottom:1.2em;">
+      Zap Delay:
+      <select id="zapDelaySelect">
+        <option value="0.5">0.5s</option>
+        <option value="1">1s</option>
+        <option value="1.5">1.5s</option>
+        <option value="2">2s</option>
+        <option value="2.5">2.5s</option>
+        <option value="3">3s</option>
+        <option value="3.5">3.5s</option>
+        <option value="4">4s</option>
+        <option value="4.5">4.5s</option>
+        <option value="5">5s</option>
+      </select>
+    </label>
+    <div id="toast" class="toast" style="display:none">
+      <span id="toast-msg"></span>
+      <div id="toast-timer" class="toast-timer"></div>
+    </div>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

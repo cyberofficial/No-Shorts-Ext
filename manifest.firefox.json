@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "No More Shorts",
+  "version": "1.0.10",
+  "description": "Removes Shorts shelf and Shorts videos from YouTube search results.",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.youtube.com/*"
+      ],
+      "js": [
+        "src_firefox/content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*"
+  ],
+  "background": {
+    "scripts": [
+      "src_firefox/background.js"
+    ]
+  },
+  "options_page": "src_firefox/options.html",
+  "permissions": [
+    "storage",
+    "contextMenus"
+  ],
+  "action": {
+    "default_title": "Toggle Shorts Removal"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "no-shorts-ext@example.com",
+      "strict_min_version": "109.0"
+    }
+  }
+}

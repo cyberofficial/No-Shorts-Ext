@@ -1,6 +1,10 @@
 # PowerShell script to package Chrome and Firefox builds for No Shorts Ext
 # Usage: Run from extension root directory
 
+# If builds folder does not exist, create it
+if (-not (Test-Path './builds')) {
+    New-Item -ItemType Directory -Path './builds' | Out-Null
+}
 
 
 # Get and increment version from manifest.chrome.json
@@ -32,11 +36,12 @@ Remove-Item './manifest.json'
 
 
 
+
 # Firefox build
 Copy-Item './manifest.firefox.json' './manifest.json' -Force
 $firefoxZip = "./builds/${version}.firefox.zip"
 if (Test-Path $firefoxZip) { Remove-Item $firefoxZip }
-Compress-Archive -Path './src', './manifest.json' -DestinationPath $firefoxZip
+Compress-Archive -Path './src_firefox', './manifest.json' -DestinationPath $firefoxZip
 Remove-Item './manifest.json'
 
 Write-Host 'Builds created:'
